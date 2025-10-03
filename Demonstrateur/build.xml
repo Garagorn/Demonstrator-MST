@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GrapheProjet" default="run" basedir=".">
+
+    <!-- Propriétés générales -->
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="dist.dir"    value="dist"/>
+    <property name="main.class"  value="graph.Main"/>
+
+    <!-- Création des dossiers -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <!-- Nettoyage -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <!-- Compilation (clean d'abord) -->
+    <target name="compile" depends="clean,init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false"/>
+    </target>
+
+    <!-- Création du JAR exécutable -->
+    <target name="jar" depends="compile">
+        <jar destfile="${dist.dir}/GrapheProjet.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Exécution -->
+    <target name="run" depends="jar">
+        <java jar="${dist.dir}/GrapheProjet.jar" fork="true"/>
+    </target>
+
+</project>
+
