@@ -1,4 +1,4 @@
-package graph;
+package demonstrateur.modele;
 
     /**
      * Classe de représentation des aretes d'un graphe
