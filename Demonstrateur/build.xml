@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GrapheProjet" default="run" basedir=".">
+<project name="GrapheProjet" default="runGraphique" basedir=".">
 
     <!-- Propriétés générales -->
-    <property name="src.dir"     value="src"/>
-    <property name="build.dir"   value="build"/>
-    <property name="dist.dir"    value="dist"/>
-    <property name="main.class"  value="demonstrateur.Main"/>
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="main.modele.class" value="demonstrateur.modele.MainModele"/>
+    <property name="main.graphique.class" value="demonstrateur.Main"/>
 
     <!-- Création des dossiers -->
     <target name="init">
@@ -28,15 +29,25 @@
     <target name="jar" depends="compile">
         <jar destfile="${dist.dir}/GrapheProjet.jar" basedir="${build.dir}">
             <manifest>
-                <attribute name="Main-Class" value="${main.class}"/>
+                <attribute name="Main-Class" value="${main.graphique.class}"/>
             </manifest>
         </jar>
     </target>
 
-    <!-- Exécution -->
-    <target name="run" depends="jar">
+    <!-- Exécution graphique par défaut -->
+    <target name="Visu" depends="jar">
         <java jar="${dist.dir}/GrapheProjet.jar" fork="true"/>
     </target>
 
+    <!-- Exécution du modèle en console -->
+    <target name="Modele" depends="compile">
+        <java classname="${main.modele.class}" fork="true">
+            <classpath>
+                <pathelement location="${build.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
 </project>
+
 

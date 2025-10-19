@@ -32,10 +32,12 @@ public class Arbre {
      * @param a Arete à ajouter au  graphe
      */
     public void ajouterArete(Arete a) {
-        aretes.add(a);
-        poidsTotal += a.getPoids();
-        ajouterSommet(a.getU());
-        ajouterSommet(a.getV());
+        if (!aretes.contains(a)) {
+            aretes.add(a);
+            poidsTotal += a.getPoids();
+            ajouterSommet(a.getU());
+            ajouterSommet(a.getV());
+        }
     }
 
     /**
@@ -81,6 +83,17 @@ public class Arbre {
         for (Sommet s : sommets) g.ajouterSommet(s);
         for (Arete a : aretes) g.ajouterArete(a);
         return g;
+    }
+    
+    /**
+     * Methode d'affichage  d'un arbre
+     */
+    public void afficherArbre() {
+        System.out.println("=== Arbre couvrant minimal ===");
+        for (Arete a : aretes) {
+            System.out.println(a.getU().getNom() + " -- " + a.getPoids() + " -- " + a.getV().getNom());
+        }
+        System.out.println("Poids total : " + poidsTotal);
     }
     
 }
