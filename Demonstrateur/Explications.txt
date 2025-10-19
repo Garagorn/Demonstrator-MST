@@ -4,7 +4,7 @@ Démonstrateur comparant les algorithmes de  Kruskal et de Boruvka.
 1.2 Vérification de la connexité du graphe
 
 2. 
-- Affichage en vue d'un Graphe
+- Affichage en vue d'un Graphe : Done
 - Implémetation de Kruskal
 - Implémentation de Boruvka
 

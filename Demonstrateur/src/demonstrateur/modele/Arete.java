@@ -4,10 +4,16 @@ package demonstrateur.modele;
      * Classe de représentation des aretes d'un graphe
      */
 public class Arete implements Comparable<Arete> {
-    private Sommet u;
-    private Sommet v;
-    private int poids;
+    private final Sommet u;
+    private final Sommet v;
+    private final int poids;
 
+    /**
+     * Constructeur d'une arete
+     * @param u Sommet u de l'arete
+     * @param v Sommet v de l'arete
+     * @param poids Poids de l'arete u,v
+     */
     public Arete(Sommet u, Sommet v, int poids) {
         this.u = u;
         this.v = v;
@@ -38,6 +44,11 @@ public class Arete implements Comparable<Arete> {
         return poids;
     }
 
+    /**
+     * Methode de  comparaison entre deux arete
+     * @param autre Arete que l'on compare  à celle-ci
+     * @return Bool  
+     */
     @Override
     public int compareTo(Arete autre) {
         return Integer.compare(this.poids, autre.poids);
