@@ -6,20 +6,33 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
     public MainFrame() {
-        setTitle("Démonstrateur : Graphe aléatoire");
+        setTitle("Démonstrateur : Prim & Kruskal");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 500);
+        setSize(1200, 500);
 
-        GraphPanel panel = new GraphPanel();
-        GraphControleur controller = new GraphControleur(panel);
+        // Trois panneaux
+        GraphPanel panelBase = new GraphPanel();
+        GraphPanel panelPrim = new GraphPanel();
+        GraphPanel panelKruskal = new GraphPanel();
 
+        // Contrôleur
+        GraphControleur controller = new GraphControleur(panelBase, panelPrim, panelKruskal);
+
+        // Bouton
         JButton btnGenerer = new JButton("Générer un graphe");
         btnGenerer.addActionListener(e -> controller.genererNouveauGraphe());
 
+        // Ligne de boutons en haut
         JPanel top = new JPanel();
         top.add(btnGenerer);
 
+        // Trois vues côte à côte
+        JPanel panels = new JPanel(new GridLayout(1, 3));
+        panels.add(panelBase);
+        panels.add(panelPrim);
+        panels.add(panelKruskal);
+
         add(top, BorderLayout.NORTH);
-        add(panel, BorderLayout.CENTER);
+        add(panels, BorderLayout.CENTER);
     }
 }
