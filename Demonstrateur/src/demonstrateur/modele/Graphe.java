@@ -166,6 +166,66 @@ public class Graphe {
         return prim;
     }
 
+    /**Kruskal(G) :
+    1   A := ø
+    2   pour chaque sommet v de G :
+    3      créerEnsemble(v)
+    4   trier les arêtes de G par poids croissant
+    5   pour chaque arête (u, v) de G prise par poids croissant :
+    6      si find(u) ≠ find(v) :
+    7         ajouter l'arête (u, v) à l'ensemble A
+    8         union(u, v)
+    9   renvoyer A **/
+ 
+    public Arbre Kruskal()
+    {
+        Arbre kruskal =  new Arbre();
+
+        //Trie arete pas poids croissant
+        List<Arete> areteTriees = new ArrayList<>(aretes);
+        Collections.sort(areteTriees);
+
+        //init Union-Find
+        Map<Sommet, Sommet> parent = new HashMap<>();
+        for (Sommet s : sommets) {
+            parent.put(s, s);
+        }
+
+        // Méthode find
+        java.util.function.Function<Sommet, Sommet> find = new java.util.function.Function<>() {
+            @Override
+            public Sommet apply(Sommet s) {
+                Sommet p = parent.get(s);
+                if (p != s) {
+                    parent.put(s, this.apply(p)); // compression de chemin
+                }
+                return parent.get(s);
+            }
+        };
+
+        // Méthode union : fusion de deux ensembles
+        java.util.function.BiConsumer<Sommet, Sommet> union = (s1, s2) -> {
+            Sommet root1 = find.apply(s1);
+            Sommet root2 = find.apply(s2);
+            if (root1 != root2) {
+                parent.put(root2, root1);
+            }
+        };
+
+        //parcours des arêtes triées
+        for (Arete a : areteTriees) {
+            Sommet u = a.getU();
+            Sommet v = a.getV();
+
+            // Si les deux sommets appartiennent à des ensembles différents -> pas de cycle
+            if (find.apply(u) != find.apply(v)) {
+                kruskal.ajouterArete(a);
+                union.accept(u, v);
+            }
+        }
+
+        return kruskal;
+    }
     /**
      * Getter de l'arete etre deux sommets
      * @param s1 1er Sommet
