@@ -11,6 +11,7 @@ public class GraphPanel extends JPanel {
     private Set<Arete> highlightedArretes = new HashSet<>();
     private String titre = "";
     private Color highlightColor = Color.GREEN; // par défaut (Prim)
+    private String infoExecution = "";
 
     public void setGraphe(Graphe g, String titre) {
         this.graphe = g;
@@ -23,6 +24,11 @@ public class GraphPanel extends JPanel {
         this.highlightedArretes.clear();
         this.highlightedArretes.addAll(arbre.getAretes());
         this.highlightColor = color;
+        repaint();
+    }
+
+    public void setExecutionInfo(String info) {
+        this.infoExecution = info;
         repaint();
     }
 
@@ -65,5 +71,10 @@ public class GraphPanel extends JPanel {
             g2.setColor(Color.BLACK);
             g2.drawString(s.getNom(), s.getX() - 10, s.getY() - 15);
         }
+
+        if (!infoExecution.isEmpty()) {
+            g.drawString(infoExecution, 10, getHeight() - 10);
+        }
+
     }
 }

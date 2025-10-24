@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c1c282a2-63fb-4ca0-8da6-764a2b7a7530" name="Changes" comment="" />
+    <list default="true" id="c1c282a2-63fb-4ca0-8da6-764a2b7a7530" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/controleur/GraphControleur.class" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/controleur/GraphControleur.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/modele/Arbre.class" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/modele/Arbre.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/modele/MainModele.class" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/modele/MainModele.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/vue/GraphPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/build/demonstrateur/vue/GraphPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/dist/GrapheProjet.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/dist/GrapheProjet.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/controleur/GraphControleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/controleur/GraphControleur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/modele/Arbre.java" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/modele/Arbre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/modele/MainModele.java" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/modele/MainModele.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/vue/GraphPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Demonstrateur/src/demonstrateur/vue/GraphPanel.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,6 +47,7 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
@@ -61,6 +73,7 @@
       <workItem from="1761242335494" duration="95000" />
       <workItem from="1761242433873" duration="2000" />
       <workItem from="1761242448905" duration="3999000" />
+      <workItem from="1761321773338" duration="2333000" />
     </task>
     <servers />
   </component>

@@ -89,7 +89,6 @@ public class Arbre {
      * Methode d'affichage  d'un arbre
      */
     public void afficherArbre() {
-        System.out.println("=== Arbre couvrant minimal ===");
         for (Arete a : aretes) {
             System.out.println(a.getU().getNom() + " -- " + a.getPoids() + " -- " + a.getV().getNom());
         }

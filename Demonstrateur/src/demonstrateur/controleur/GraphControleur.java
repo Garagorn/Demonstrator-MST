@@ -20,16 +20,30 @@ public class GraphControleur {
         graphe = Graphe.genererAleatoire(6);
         Sommet depart = graphe.getSommets().get(0);
 
+        // === Prim ===
+        long debutPrim = System.nanoTime();
         Arbre arbrePrim = graphe.Prim(depart);
+        long tempsPrim = System.nanoTime() - debutPrim;
+
+        // === Kruskal ===
+        long debutKruskal = System.nanoTime();
         Arbre arbreKruskal = graphe.Kruskal();
+        long tempsKruskal = System.nanoTime() - debutKruskal;
 
-        // même graphe pour les 3 panneaux
+        // Mise à jour des 3 panneaux
         panelBase.setGraphe(graphe, "Graphe initial");
-        panelPrim.setGraphe(graphe, "Arbre couvrant - Prim");
-        panelKruskal.setGraphe(graphe, "Arbre couvrant - Kruskal");
 
-        // surlignage des arbres
+        panelPrim.setGraphe(graphe, "Prim - MST");
         panelPrim.setHighlightArbre(arbrePrim, Color.GREEN);
+        panelPrim.setExecutionInfo(
+                String.format("Temps: %.3f ms", tempsPrim / 1_000_000.0)
+        );
+
+        panelKruskal.setGraphe(graphe, "Kruskal - MST");
         panelKruskal.setHighlightArbre(arbreKruskal, Color.BLUE);
+        panelKruskal.setExecutionInfo(
+                String.format("Temps: %.3f ms", tempsKruskal / 1_000_000.0)
+        );
+
     }
 }
