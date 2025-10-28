@@ -1,34 +1,74 @@
 package demonstrateur.vue;
 
 import demonstrateur.modele.*;
-import javax.swing.*;
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import javax.swing.*;
 
 public class GraphPanel extends JPanel {
     private Graphe graphe;
-    private Set<Arete> highlightedArretes = new HashSet<>();
     private String titre = "";
-    private Color highlightColor = Color.GREEN; // par défaut (Prim)
-    private String infoExecution = "";
+    private java.util.List<Arete> highlightedEdges = new ArrayList<>();
+    private Color highlightColor = Color.GREEN;
+    private String executionInfo = "";
+    private boolean isInstantMode = false;
+
+    // Pour l’animation pas à pas
+    private java.util.List<Arete> sequence = new ArrayList<>();
+    private int currentIndex = 0;
+    private javax.swing.Timer timer;
+
+    public GraphPanel() {
+        setPreferredSize(new Dimension(400, 300));
+        setBackground(Color.WHITE);
+    }
 
     public void setGraphe(Graphe g, String titre) {
         this.graphe = g;
         this.titre = titre;
-        this.highlightedArretes.clear();
         repaint();
     }
 
     public void setHighlightArbre(Arbre arbre, Color color) {
-        this.highlightedArretes.clear();
-        this.highlightedArretes.addAll(arbre.getAretes());
+        this.highlightedEdges = new ArrayList<>(arbre.getAretes());
         this.highlightColor = color;
         repaint();
     }
 
-    public void setExecutionInfo(String info) {
-        this.infoExecution = info;
+    public void setExecutionInfo(String info, boolean isInstant) {
+        this.executionInfo = info;
+        this.isInstantMode = isInstant;
+        repaint();
+    }
+
+    public void setSequence(java.util.List<Arete> seq) {
+        this.sequence = seq;
+        this.currentIndex = 0;
+    }
+
+    public void playSequence(int delayMs, Color color) {
+        if (sequence == null || sequence.isEmpty()) return;
+        if (timer != null && timer.isRunning()) timer.stop();
+        this.currentIndex = 0;
+        this.highlightColor = color;
+        highlightedEdges.clear();
+        timer = new javax.swing.Timer(delayMs, e -> {
+            if (currentIndex < sequence.size()) {
+                Arete a = sequence.get(currentIndex);
+                highlightedEdges.add(a);
+                currentIndex++;
+                repaint();
+            } else {
+                ((javax.swing.Timer) e.getSource()).stop();
+            }
+        });
+        timer.start();
+    }
+
+    public void resetAnimation() {
+        if (timer != null && timer.isRunning()) timer.stop();
+        highlightedEdges.clear();
+        currentIndex = 0;
         repaint();
     }
 
@@ -36,45 +76,47 @@ public class GraphPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (graphe == null) return;
-
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(2));
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setStroke(new BasicStroke(1.5f));
 
-        // Titre
-        g2.setColor(Color.BLACK);
-        g2.drawString(titre, 10, 15);
-
-        // 1️⃣ Dessiner toutes les arêtes en gris clair
+        // --- Dessin des arêtes normales ---
         g2.setColor(Color.LIGHT_GRAY);
         for (Arete a : graphe.getAretes()) {
             int x1 = a.getU().getX(), y1 = a.getU().getY();
             int x2 = a.getV().getX(), y2 = a.getV().getY();
             g2.drawLine(x1, y1, x2, y2);
+            // Poids
+            String p = String.valueOf(a.getPoids());
+            int px = (x1 + x2) / 2, py = (y1 + y2) / 2;
             g2.setColor(Color.DARK_GRAY);
-            g2.drawString(String.valueOf(a.getPoids()), (x1 + x2) / 2, (y1 + y2) / 2);
+            g2.drawString(p, px, py);
             g2.setColor(Color.LIGHT_GRAY);
         }
 
-        // 2️⃣ Dessiner les arêtes de l’arbre en couleur
+        // --- Dessin des arêtes surlignées (MST / étape) ---
         g2.setColor(highlightColor);
-        g2.setStroke(new BasicStroke(3));
-        for (Arete a : highlightedArretes) {
+        g2.setStroke(new BasicStroke(3f));
+        for (Arete a : highlightedEdges) {
             int x1 = a.getU().getX(), y1 = a.getU().getY();
             int x2 = a.getV().getX(), y2 = a.getV().getY();
             g2.drawLine(x1, y1, x2, y2);
         }
 
-        // 3️⃣ Dessiner les sommets
+        // --- Dessin des sommets ---
         for (Sommet s : graphe.getSommets()) {
+            int x = s.getX(), y = s.getY();
             g2.setColor(Color.ORANGE);
-            g2.fillOval(s.getX() - 10, s.getY() - 10, 20, 20);
+            g2.fillOval(x - 8, y - 8, 16, 16);
             g2.setColor(Color.BLACK);
-            g2.drawString(s.getNom(), s.getX() - 10, s.getY() - 15);
+            g2.drawOval(x - 8, y - 8, 16, 16);
+            g2.drawString(s.getNom(), x + 10, y);
         }
 
-        if (!infoExecution.isEmpty()) {
-            g.drawString(infoExecution, 10, getHeight() - 10);
-        }
-
+        // --- Titre et infos ---
+        g2.setColor(Color.BLACK);
+        g2.drawString(titre, 10, 20);
+        String infoToShow = isInstantMode ? executionInfo : executionInfo.split("\n")[0];
+        g2.drawString(infoToShow, 10, getHeight() - 10);
     }
 }
