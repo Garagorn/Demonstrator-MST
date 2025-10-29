@@ -4,81 +4,160 @@ import demonstrateur.modele.*;
 import demonstrateur.vue.GraphPanel;
 import java.awt.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 public class GraphControleur {
     private final GraphPanel panelGraph;
     private final GraphPanel panelPrim;
     private final GraphPanel panelKruskal;
     private Graphe graphe;
-
+    private int delayMs = 1000; // Délai par défaut entre les étapes
+    
     public GraphControleur(GraphPanel panelGraph, GraphPanel panelPrim, GraphPanel panelKruskal) {
         this.panelGraph = panelGraph;
         this.panelPrim = panelPrim;
         this.panelKruskal = panelKruskal;
     }
-
+    
     public void genererNouveauGraphe() {
+        // Arrêter les animations en cours
+        panelPrim.stopAnimation();
+        panelKruskal.stopAnimation();
+        
         graphe = Graphe.genererAleatoire(20);
         panelGraph.setGraphe(graphe, "Graphe initial");
         panelPrim.setGraphe(graphe, "Arbre couvrant (Prim)");
         panelKruskal.setGraphe(graphe, "Arbre couvrant (Kruskal)");
     }
-
+    
     public void lancerInstantane() {
-        if (graphe == null) return;
+        if (!validerGraphe()) return;
+        
+        // Arrêter les animations en cours
+        panelPrim.stopAnimation();
+        panelKruskal.stopAnimation();
+        
         Sommet depart = graphe.getSommets().get(0);
-
+        
         // Prim
         long debutPrim = System.nanoTime();
         Arbre mstPrim = graphe.Prim(depart);
         long tempsPrim = System.nanoTime() - debutPrim;
-        panelPrim.setHighlightArbre(mstPrim, Color.RED);
+        
+        panelPrim.setHighlightArbre(mstPrim, new Color(220, 20, 60)); // Rouge crimson
         panelPrim.setExecutionInfo(
-            "Poids total : " + mstPrim.getPoidsTotal() + "\n" +
-            "Temps : " + (tempsPrim / 1_000_000.0) + " ms",
-            true // mode instantané
+            String.format("Poids total : %d | Temps : %.3f ms | Arêtes : %d", 
+                mstPrim.getPoidsTotal(),
+                tempsPrim / 1_000_000.0,
+                mstPrim.getAretes().size()),
+            true
         );
-
+        
         // Kruskal
         long debutKruskal = System.nanoTime();
         Arbre mstKruskal = graphe.Kruskal();
         long tempsKruskal = System.nanoTime() - debutKruskal;
-        panelKruskal.setHighlightArbre(mstKruskal, Color.BLUE);
+        
+        panelKruskal.setHighlightArbre(mstKruskal, new Color(30, 144, 255)); // Bleu dodger
         panelKruskal.setExecutionInfo(
-            "Poids total : " + mstKruskal.getPoidsTotal() + "\n" +
-            "Temps : " + (tempsKruskal / 1_000_000.0) + " ms",
-            true // mode instantané
+            String.format("Poids total : %d | Temps : %.3f ms | Arêtes : %d", 
+                mstKruskal.getPoidsTotal(),
+                tempsKruskal / 1_000_000.0,
+                mstKruskal.getAretes().size()),
+            true
         );
     }
-
+    
     public void lancerPasAPas() {
-        if (graphe == null) return;
+        if (!validerGraphe()) return;
+        
+        // Arrêter les animations en cours
+        panelPrim.stopAnimation();
+        panelKruskal.stopAnimation();
+        
         Sommet depart = graphe.getSommets().get(0);
-
-        // Prim
+        
+        // Prim - Calcul de la séquence
         long debutPrim = System.nanoTime();
         java.util.List<Arete> seqPrim = graphe.primSequence(depart);
         long tempsPrim = System.nanoTime() - debutPrim;
-        panelPrim.setSequence(seqPrim);
-        panelPrim.playSequence(2000, Color.RED); // 2000ms = 2 secondes entre chaque étape
+        
+        // Calculer le MST pour avoir le poids total
         Arbre mstPrim = graphe.Prim(depart);
+        
+        panelPrim.setSequence(seqPrim);
         panelPrim.setExecutionInfo(
-            "Poids total : " + mstPrim.getPoidsTotal() + "\n" +
-            "Temps : " + (tempsPrim / 1_000_000.0) + " ms",
-            false // mode pas à pas
+            String.format("Poids total : %d | Temps calcul : %.3f ms", 
+                mstPrim.getPoidsTotal(),
+                tempsPrim / 1_000_000.0),
+            false
         );
-
-        // Kruskal
+        panelPrim.playSequence(delayMs, new Color(220, 20, 60)); // Rouge crimson
+        
+        // Kruskal - Calcul de la séquence
         long debutKruskal = System.nanoTime();
         java.util.List<Arete> seqKruskal = graphe.kruskalSequence();
         long tempsKruskal = System.nanoTime() - debutKruskal;
-        panelKruskal.setSequence(seqKruskal);
-        panelKruskal.playSequence(2000, Color.BLUE); // 2000ms = 2 secondes entre chaque étape
+        
+        // Calculer le MST pour avoir le poids total
         Arbre mstKruskal = graphe.Kruskal();
+        
+        panelKruskal.setSequence(seqKruskal);
         panelKruskal.setExecutionInfo(
-            "Poids total : " + mstKruskal.getPoidsTotal() + "\n" +
-            "Temps : " + (tempsKruskal / 1_000_000.0) + " ms",
-            false // mode pas à pas
+            String.format("Poids total : %d | Temps calcul : %.3f ms", 
+                mstKruskal.getPoidsTotal(),
+                tempsKruskal / 1_000_000.0),
+            false
         );
+        panelKruskal.playSequence(delayMs, new Color(30, 144, 255)); // Bleu dodger
+    }
+    
+    public void pauseAnimations() {
+        panelPrim.pauseAnimation();
+        panelKruskal.pauseAnimation();
+    }
+    
+    public void resumeAnimations() {
+        panelPrim.resumeAnimation();
+        panelKruskal.resumeAnimation();
+    }
+    
+    public void stopAnimations() {
+        panelPrim.stopAnimation();
+        panelKruskal.stopAnimation();
+    }
+    
+    public void resetAnimations() {
+        panelPrim.resetAnimation();
+        panelKruskal.resetAnimation();
+    }
+    
+    public void setDelayMs(int delay) {
+        if (delay > 0 && delay <= 5000) {
+            this.delayMs = delay;
+        }
+    }
+    
+    public int getDelayMs() {
+        return delayMs;
+    }
+    
+    public boolean isAnimating() {
+        return panelPrim.isAnimating() || panelKruskal.isAnimating();
+    }
+    
+    public boolean isPaused() {
+        return panelPrim.isPaused() || panelKruskal.isPaused();
+    }
+    
+    private boolean validerGraphe() {
+        if (graphe == null || graphe.getSommets().isEmpty()) {
+            JOptionPane.showMessageDialog(null, 
+                "Veuillez d'abord générer un graphe", 
+                "Erreur", 
+                JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
     }
 }
