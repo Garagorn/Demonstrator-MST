@@ -12,7 +12,7 @@ public class MainModele {
     public static void main(String[] args) {
 
         //Génération d’un graphe aléatoire
-        Graphe g = Graphe.genererAleatoire(20); // par ex. 6 sommets
+        Graphe g = Graphe.genererAleatoire(20);
         System.out.println("=== Graphe initial ===");
         g.afficherGraphe();
 

@@ -11,7 +11,7 @@ public class GraphControleur {
     private final GraphPanel panelPrim;
     private final GraphPanel panelKruskal;
     private Graphe graphe;
-    private int delayMs = 1000; // Délai par défaut entre les étapes
+    private int delayMs = 1500; // Délai par défaut entre les étapes
     
     public GraphControleur(GraphPanel panelGraph, GraphPanel panelPrim, GraphPanel panelKruskal) {
         this.panelGraph = panelGraph;
@@ -24,7 +24,7 @@ public class GraphControleur {
         panelPrim.stopAnimation();
         panelKruskal.stopAnimation();
         
-        graphe = Graphe.genererAleatoire(20);
+        graphe = Graphe.genererAleatoire(17);
         panelGraph.setGraphe(graphe, "Graphe initial");
         panelPrim.setGraphe(graphe, "Arbre couvrant (Prim)");
         panelKruskal.setGraphe(graphe, "Arbre couvrant (Kruskal)");
