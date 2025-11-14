@@ -1,12 +1,22 @@
 package demonstrateur.vue;
 
-import demonstrateur.modele.*;
+import demonstrateur.modele.Arbre;
+import demonstrateur.modele.Arete;
+import demonstrateur.modele.Graphe;
+import demonstrateur.modele.Sommet;
 import java.awt.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Comparator;
+
+
 
 public class GraphPanel extends JPanel {
+    private Sommet sommetDepart;
+
     // Constantes pour l'affichage
     private static final int VERTEX_RADIUS = 8;
     private static final int VERTEX_DIAMETER = 16;
@@ -28,7 +38,28 @@ public class GraphPanel extends JPanel {
     private int currentIndex = 0;
     private javax.swing.Timer timer;
     private boolean isPaused = false;
+
+    private PriorityQueuePanel primQueuePanel;
+    private SortedEdgeTablePanel kruskalEdgePanel;
+    private List<Arete> currentQueue = new ArrayList<>();
+    private List<Arete> fullEdgeList = new ArrayList<>();
     
+    public void setPrimQueuePanel(PriorityQueuePanel panel) {
+        this.primQueuePanel = panel;
+    }
+
+    public void setKruskalEdgePanel(SortedEdgeTablePanel panel) {
+        this.kruskalEdgePanel = panel;
+    }
+
+    public void setCurrentQueue(List<Arete> queue) {
+        this.currentQueue = queue;
+    }
+
+    public void setFullEdgeList(List<Arete> edges) {
+        this.fullEdgeList = edges;
+    }
+
     public GraphPanel() {
         setPreferredSize(new Dimension(400, 300));
         setBackground(Color.WHITE);
@@ -41,6 +72,7 @@ public class GraphPanel extends JPanel {
         this.highlightedEdges.clear();
         this.currentEdge = null;
         this.currentIndex = 0;
+        this.sommetDepart = graphe.getSommets().get(0); // ou celui que tu veux
         repaint();
     }
     
@@ -63,7 +95,7 @@ public class GraphPanel extends JPanel {
         this.highlightedEdges.clear();
         this.currentEdge = null;
     }
-    
+
     public void playSequence(int delayMs, Color color) {
         if (sequence == null || sequence.isEmpty()) return;
         
@@ -80,22 +112,45 @@ public class GraphPanel extends JPanel {
                 // L'arête précédente devient permanente
                 if (currentEdge != null) {
                     highlightedEdges.add(currentEdge);
+                    if (primQueuePanel != null) {
+                        primQueuePanel.clearCurrentEdge();
+                    }
                 }
                 
                 // Nouvelle arête courante
                 currentEdge = sequence.get(currentIndex);
-                currentIndex++;
                 
-                // Mise à jour de l'info d'étape
+                // ✨ RECALCULER LA FILE DE PRIORITÉ À CETTE ÉTAPE
+                if (primQueuePanel != null && graphe != null && sommetDepart != null) {
+                    // Recalculer la file en tenant compte des arêtes déjà ajoutées
+                    List<Arete> updatedQueue = graphe.primPriorityQueueAtStep(
+                        sommetDepart, 
+                        highlightedEdges
+                    );
+                    
+                    // Retirer l'arête courante de la file
+                    updatedQueue.remove(currentEdge);
+                    
+                    primQueuePanel.updateQueue(updatedQueue);
+                    primQueuePanel.setCurrentEdge(currentEdge);
+                }
+                
+                if (kruskalEdgePanel != null) {
+                    kruskalEdgePanel.updateEdges(fullEdgeList, highlightedEdges);
+                }
+
+                currentIndex++;
                 updateStepInfo();
                 repaint();
                 
-                // Si c'est la dernière arête, on l'ajoute définitivement après un délai
                 if (currentIndex >= sequence.size()) {
                     Timer finalTimer = new Timer(delayMs, evt -> {
                         if (currentEdge != null) {
                             highlightedEdges.add(currentEdge);
                             currentEdge = null;
+                            if (primQueuePanel != null) {
+                                primQueuePanel.clear(); // File vide à la fin
+                            }
                             repaint();
                         }
                         ((Timer) evt.getSource()).stop();
@@ -108,6 +163,13 @@ public class GraphPanel extends JPanel {
                 ((javax.swing.Timer) e.getSource()).stop();
             }
         });
+        
+        // ✨ INITIALISER LA FILE AVANT DE DÉMARRER
+        if (primQueuePanel != null && graphe != null && sommetDepart != null) {
+            List<Arete> initialQueue = graphe.primPriorityQueueAtStep(sommetDepart, new ArrayList<>());
+            primQueuePanel.updateQueue(initialQueue);
+        }
+        
         timer.start();
     }
     
@@ -155,6 +217,38 @@ public class GraphPanel extends JPanel {
         return isPaused;
     }
     
+    private void calculateScaling(Graphics2D g2) {
+        if (graphe == null || graphe.getSommets().isEmpty()) return;
+        
+        // Trouver les bornes du graphe
+        int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+        
+        for (Sommet s : graphe.getSommets()) {
+            minX = Math.min(minX, s.getX());
+            maxX = Math.max(maxX, s.getX());
+            minY = Math.min(minY, s.getY());
+            maxY = Math.max(maxY, s.getY());
+        }
+        
+        int graphWidth = maxX - minX;
+        int graphHeight = maxY - minY;
+        
+        // Marges
+        int margin = 40;
+        int availableWidth = getWidth() - 2 * margin;
+        int availableHeight = getHeight() - 2 * margin - 60; // 60 pour l'info en bas
+        
+        // Calculer le facteur d'échelle
+        double scaleX = (double) availableWidth / graphWidth;
+        double scaleY = (double) availableHeight / graphHeight;
+        double scale = Math.min(scaleX, scaleY);
+        
+        // Appliquer la transformation
+        g2.translate(margin - minX * scale, margin - minY * scale);
+        g2.scale(scale, scale);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -164,34 +258,43 @@ public class GraphPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         
-        // --- Dessin des arêtes normales (en gris clair) ---
-        g2.setColor(Color.LIGHT_GRAY);
-        g2.setStroke(new BasicStroke(EDGE_WIDTH));
-        for (Arete a : graphe.getAretes()) {
-            drawEdge(g2, a, Color.LIGHT_GRAY, EDGE_WIDTH, false);
-        }
-        
-        // --- Dessin des arêtes déjà ajoutées au MST ---
-        g2.setColor(highlightColor);
-        g2.setStroke(new BasicStroke(HIGHLIGHT_WIDTH));
-        for (Arete a : highlightedEdges) {
-            drawEdge(g2, a, highlightColor, HIGHLIGHT_WIDTH, true);
-        }
-        
-        // --- Dessin de l'arête en cours d'ajout (avec effet visuel spécial) ---
-        if (currentEdge != null) {
-            drawCurrentEdge(g2, currentEdge);
-        }
-        
-        // --- Dessin des sommets ---
-        drawVertices(g2);
-        
-        // --- Titre ---
+        // --- Titre (avant transformation) ---
         g2.setColor(Color.BLACK);
         g2.setFont(new Font("Arial", Font.BOLD, 14));
         g2.drawString(titre, 10, 20);
         
-        // --- Informations d'exécution ---
+        // Sauvegarder l'état graphique
+        Graphics2D g2Graph = (Graphics2D) g2.create();
+        
+        // Appliquer la mise à l'échelle
+        calculateScaling(g2Graph);
+        
+        // --- Dessin des arêtes normales ---
+        g2Graph.setColor(Color.LIGHT_GRAY);
+        g2Graph.setStroke(new BasicStroke(EDGE_WIDTH));
+        for (Arete a : graphe.getAretes()) {
+            drawEdge(g2Graph, a, Color.LIGHT_GRAY, EDGE_WIDTH, false);
+        }
+        
+        // --- Dessin des arêtes déjà ajoutées au MST ---
+        g2Graph.setColor(highlightColor);
+        g2Graph.setStroke(new BasicStroke(HIGHLIGHT_WIDTH));
+        for (Arete a : highlightedEdges) {
+            drawEdge(g2Graph, a, highlightColor, HIGHLIGHT_WIDTH, true);
+        }
+        
+        // --- Dessin de l'arête en cours d'ajout ---
+        if (currentEdge != null) {
+            drawCurrentEdge(g2Graph, currentEdge);
+        }
+        
+        // --- Dessin des sommets ---
+        drawVertices(g2Graph);
+        
+        // Libérer le contexte graphique transformé
+        g2Graph.dispose();
+        
+        // --- Informations d'exécution (après transformation, sur g2 original) ---
         drawExecutionInfo(g2);
     }
     
@@ -321,4 +424,14 @@ public class GraphPanel extends JPanel {
             yOffset += lineHeight;
         }
     }
+
+    public void refreshAuxiliaryPanels() {
+        if (primQueuePanel != null) {
+            primQueuePanel.updateQueue(currentQueue);
+        }
+        if (kruskalEdgePanel != null) {
+            kruskalEdgePanel.updateEdges(fullEdgeList, highlightedEdges);
+        }
+    }
+
 }

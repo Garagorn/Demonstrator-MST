@@ -1,11 +1,13 @@
 package demonstrateur.vue;
 
-import demonstrateur.controleur.*;
-import javax.swing.*;
+import demonstrateur.controleur.GraphControleur;
 import java.awt.*;
+import javax.swing.*;
+
 
 public class MainFrame extends JFrame {
     private GraphControleur controller;
+    private StructurePanel structurePanel;
     private JButton btnPause;
     private JButton btnStop;
     private JSlider speedSlider;
@@ -22,6 +24,13 @@ public class MainFrame extends JFrame {
         GraphPanel panelPrim = new GraphPanel();
         GraphPanel panelKruskal = new GraphPanel();
         
+        // Création du panneau des structures internes
+        structurePanel = new StructurePanel();
+
+        // Connexion des panneaux auxiliaires aux GraphPanels
+        panelPrim.setPrimQueuePanel(structurePanel.getPrimQueuePanel());
+        panelKruskal.setKruskalEdgePanel(structurePanel.getKruskalEdgePanel());
+
         panelGraph.setPreferredSize(new Dimension(450, 700));
         panelPrim.setPreferredSize(new Dimension(450, 700));
         panelKruskal.setPreferredSize(new Dimension(450, 700));
@@ -43,7 +52,13 @@ public class MainFrame extends JFrame {
         
         // Panneau d'informations en bas
         JPanel bottomPanel = createInfoPanel();
-        add(bottomPanel, BorderLayout.SOUTH);
+        JPanel southContainer = new JPanel();
+        southContainer.setLayout(new BoxLayout(southContainer, BoxLayout.Y_AXIS));
+        southContainer.add(structurePanel);
+        southContainer.add(bottomPanel);
+
+add(southContainer, BorderLayout.SOUTH);
+
         
         // Générer un graphe initial
         controller.genererNouveauGraphe();

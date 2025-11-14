@@ -146,6 +146,80 @@ public class Graphe {
         return sequence;
     }
 
+    /** File de priorité (arêtes candidates) pour Prim */
+    public List<Arete> primPriorityQueue(Sommet depart) {
+        List<Arete> queue = new ArrayList<>();
+        Map<Sommet, Integer> cout = new HashMap<>();
+        Map<Sommet, Sommet> pred = new HashMap<>();
+
+        for (Sommet t : sommets) {
+            cout.put(t, Integer.MAX_VALUE);
+            pred.put(t, null);
+        }
+        cout.put(depart, 0);
+
+        PriorityQueue<Sommet> file = new PriorityQueue<>(Comparator.comparingInt(cout::get));
+        file.addAll(sommets);
+
+        while (!file.isEmpty()) {
+            Sommet t = file.poll();
+            for (Arete a : aretes) {
+                Sommet u = null;
+                if (a.getU().equals(t)) u = a.getV();
+                else if (a.getV().equals(t)) u = a.getU();
+
+                if (u != null && file.contains(u)) {
+                    int poids = a.getPoids();
+                    if (poids < cout.get(u)) {
+                        cout.put(u, poids);
+                        pred.put(u, t);
+                        file.remove(u);
+                        file.add(u);
+                    }
+                    queue.add(a); // ajoute l’arête candidate
+                }
+            }
+        }
+        return queue;
+    }
+
+    // Dans Graphe.java
+
+    /**
+     * Retourne la file de priorité à un moment donné de l'algorithme de Prim
+     * @param depart Le sommet de départ
+     * @param aretesAjoutees Les arêtes déjà ajoutées au MST
+     * @return La liste des arêtes candidates triées par poids
+     */
+    public List<Arete> primPriorityQueueAtStep(Sommet depart, List<Arete> aretesAjoutees) {
+        Set<Sommet> visites = new HashSet<>();
+        visites.add(depart);
+        
+        // Ajouter tous les sommets des arêtes déjà ajoutées
+        for (Arete a : aretesAjoutees) {
+            visites.add(a.getU());
+            visites.add(a.getV());
+        }
+        
+        // Trouver toutes les arêtes candidates
+        List<Arete> candidates = new ArrayList<>();
+        
+        for (Arete a : aretes) {
+            boolean uVisite = visites.contains(a.getU());
+            boolean vVisite = visites.contains(a.getV());
+            
+            // L'arête est candidate si elle connecte un sommet visité à un non-visité
+            if (uVisite != vVisite) {
+                candidates.add(a);
+            }
+        }
+        
+        // Trier par poids
+        candidates.sort(Comparator.comparingInt(Arete::getPoids));
+        
+        return candidates;
+    }
+
     /** Séquence d’arêtes ajoutées par Kruskal */
     public List<Arete> kruskalSequence() {
         List<Arete> seq = new ArrayList<>();
@@ -204,6 +278,13 @@ public class Graphe {
             }
         }
         return mst;
+    }
+
+    /** Liste des arêtes triées (pour affichage Kruskal) */
+    public List<Arete> sortedEdges() {
+        List<Arete> sorted = new ArrayList<>(aretes);
+        Collections.sort(sorted);
+        return sorted;
     }
 
 }
