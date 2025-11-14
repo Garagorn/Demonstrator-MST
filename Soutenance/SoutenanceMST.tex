@@ -1,0 +1,171 @@
+\documentclass[10pt]{beamer}
+\setbeamertemplate{navigation symbols}{\insertframenumber}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}%paquet de langue français%
+\usepackage[french]{babel}%encodage de la police%
+
+\usepackage{graphicx} %'affichage des images
+\usepackage{enotez}
+
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{array,multirow,makecell}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+
+\definecolor{codegreen}{named}{green}
+\definecolor{codered}{named}{red}
+\definecolor{codeblue}{named}{blue}
+\definecolor{codeblack}{named}{black}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codeblack},
+    stringstyle=\color{codered},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=2pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=1
+}
+
+\lstset{style=mystyle}
+\usepackage[linesnumbered,ruled,french,onelanguage]{algorithm2e}
+
+\makeatletter
+\g@addto@macro{\@algocf@init}{\SetKwInput{KwOut}{Sortie}}
+\makeatother
+
+
+\author{Thomas Matthieu, Tellier Basile}
+\date{\today}
+\title{Demonstrateur : Arbre Couvrant de poids Minimal}
+\usetheme{Warsaw}
+
+\setlength{\algomargin}{1em}
+\begin{document}
+
+\begin{frame}
+\maketitle
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Table des matières}
+\tableofcontents
+\end{frame}
+
+
+\begin{frame}
+\section{Notions}
+\subsection{Rappel}
+Rappel sur les propriétées utilisées :
+  \begin{itemize}
+     \item<1-> Sommets
+     \item<1-> Sommets adjacents
+     \item<2-> Arêtes
+     \item<2-> Arêtes adjacentes
+     \item<3-> Graphe
+     \item<4-> Arbre
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\subsection{MST}
+Un arbre couvrant minimal à pour propriétées :
+\newline
+D'être un graphe :
+  \begin{itemize}
+     \item<1-> Non-Orienté
+     \item<2-> Connexe
+     \item<3-> Dont les arrêtes sont pondéres
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\section{Applications}
+Applications
+
+\begin{examples}
+  Réseau électrique
+\end{examples}
+
+\begin{examples}
+  GPS
+\end{examples}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithmes}
+\section{Algorithmes}
+\subsection{Algorithmes}
+
+\begin{block}{Générateur aléatoire}
+  Générateur de graphes aléatoires non-orienté, pondéré et connexe.
+\end{block}
+
+\begin{alertblock}{Algorithmes gloutons}
+Algorithme qui réalise étape par étape,un choix optimum local, afin d'obtenir un résultat optimum global. 
+\end{alertblock}
+
+\begin{block}{Union-Find}
+  Opération : Find / Union
+\end{block}
+
+\begin{block}{File de priorité}
+  Enfiler / Défiler l'élément à la plus grande valeur / Tester si la file est vide
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}
+\section{Démonstration}
+\textbf{Démonstration}
+
+\end{frame}
+
+\begin{frame}
+\section{Comparaison}
+\textbf{Différence entre Prim et Kruskal}
+D'être un graphe :
+  \begin{itemize}
+     \item<1-> Construction de l'arbre couvrant
+     \item<2-> Parcours de noeud
+     \item<3-> Compléxité en temps
+     \item<4-> Elements du graphes
+     \item<5-> Types de graphes
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\section{Sources}
+  Comparaison Prim Kruskal : \url{https://byjus.com/gate/difference-between-prims-and-kruskal-algorithum/}
+  \newline
+  Arbre Couvrant Minimal :\url{https://fr.wikipedia.org/wiki/Arbre_couvrant_de_poids_minimal}
+    \newline
+  Algorithme glouton : \url{https://fr.wikipedia.org/wiki/Algorithme_glouton}
+    \newline
+  Algorithme de Prim : \url{https://fr.wikipedia.org/wiki/Algorithme_de_Prim}
+    \newline
+  Algorithme de Kruskal : \url{https://fr.wikipedia.org/wiki/Algorithme_de_Kruskal}
+  
+\end{frame}
+
+\end{document}

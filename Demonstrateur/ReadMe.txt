@@ -3,6 +3,9 @@ Démonstrateur Minimum-Spanning-Tree (MST)
 	Démonstrateur de l'utilisation du calcul d'un arbre couvrant minimal avec les algorithmes de Prim et Kruskal.
 Ce démonstrateur est codé en Java et à pour rendu graphique Java Swing.
 
+0) - Logiciels utilisé (Linux)
+	Ant
+	Java
 
 1) - Pour commencer
 
@@ -10,7 +13,7 @@ Si vous souhaitez lancer directement le démonstrateur vous pouvez dans un termi
 
 /demonstrateur-mst/Demonstrateur$ ant
 
-En lançant cette commande le buid.xml va effectuer la compilation puis exécuter et lancer  le démonstrateur.
+En lançant cette commande le build.xml va effectuer la compilation puis exécuter et lancer  le démonstrateur.
 
 Si vous souhaitez seulement compiler le code : 
 	/demonstrateur-mst/Demonstrateur$ ant compile
