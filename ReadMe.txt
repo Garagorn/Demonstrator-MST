@@ -11,6 +11,8 @@ Ce démonstrateur est codé en Java et à pour rendu graphique Java Swing.
 
 Si vous souhaitez lancer directement le démonstrateur vous pouvez dans un terminal effectuer la commande $ ant
 
+Le code se trouve dans le dossier démonstrateur.
+
 /demonstrateur-mst/Demonstrateur$ ant
 
 En lançant cette commande le build.xml va effectuer la compilation puis exécuter et lancer  le démonstrateur.
