@@ -120,7 +120,6 @@ public class GraphPanel extends JPanel {
                 // Nouvelle arête courante
                 currentEdge = sequence.get(currentIndex);
                 
-                // ✨ RECALCULER LA FILE DE PRIORITÉ À CETTE ÉTAPE
                 if (primQueuePanel != null && graphe != null && sommetDepart != null) {
                     // Recalculer la file en tenant compte des arêtes déjà ajoutées
                     List<Arete> updatedQueue = graphe.primPriorityQueueAtStep(
@@ -164,7 +163,6 @@ public class GraphPanel extends JPanel {
             }
         });
         
-        // ✨ INITIALISER LA FILE AVANT DE DÉMARRER
         if (primQueuePanel != null && graphe != null && sommetDepart != null) {
             List<Arete> initialQueue = graphe.primPriorityQueueAtStep(sommetDepart, new ArrayList<>());
             primQueuePanel.updateQueue(initialQueue);

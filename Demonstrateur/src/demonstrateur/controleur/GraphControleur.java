@@ -28,7 +28,6 @@ public class GraphControleur {
         panelPrim.setGraphe(graphe, "Arbre couvrant (Prim)");
         panelKruskal.setGraphe(graphe, "Arbre couvrant (Kruskal)");
 
-        // 🔁 Mise à jour des structures internes
         List<Arete> primQueue = graphe.primPriorityQueue(graphe.getSommets().get(0));
         List<Arete> sortedEdges = graphe.sortedEdges();
 
@@ -49,7 +48,6 @@ public class GraphControleur {
         Arbre mstPrim = graphe.Prim(depart);
         long tempsPrim = System.nanoTime() - debutPrim;
 
-        // 🔁 Mise à jour des structures internes
         List<Arete> primQueue = graphe.primPriorityQueue(depart);
         List<Arete> sortedEdges = graphe.sortedEdges();
 
@@ -78,7 +76,6 @@ public class GraphControleur {
             true
         );
 
-        // ✅ Mise à jour manuelle des panneaux auxiliaires
         panelPrim.refreshAuxiliaryPanels();
         panelKruskal.refreshAuxiliaryPanels();
     }
@@ -96,7 +93,6 @@ public class GraphControleur {
         long tempsPrim = System.nanoTime() - debutPrim;
         Arbre mstPrim = graphe.Prim(depart);
 
-        // 🔁 Initialiser la file AVANT l'animation
         List<Arete> primQueue = graphe.primPriorityQueue(depart);
         panelPrim.setCurrentQueue(primQueue);
         
