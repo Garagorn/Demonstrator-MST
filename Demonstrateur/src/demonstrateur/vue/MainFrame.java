@@ -85,9 +85,9 @@ add(southContainer, BorderLayout.SOUTH);
         // Première ligne : boutons principaux
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         
-        JButton btnGenerer = new JButton("🔄 Nouveau Graphe");
-        JButton btnInstant = new JButton("⚡ Exécution Instantanée");
-        JButton btnStepByStep = new JButton("▶️ Exécution Pas à Pas");
+        JButton btnGenerer = new JButton("Nouveau Graphe");
+        JButton btnInstant = new JButton("Exécution Instantanée");
+        JButton btnStepByStep = new JButton("Exécution Pas à Pas");
         
         styleButton(btnGenerer, new Color(100, 180, 100));
         styleButton(btnInstant, new Color(255, 140, 0));
@@ -115,10 +115,10 @@ add(southContainer, BorderLayout.SOUTH);
         // Deuxième ligne : contrôles d'animation
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         
-        btnPause = new JButton("⏸️ Pause");
-        JButton btnResume = new JButton("▶️ Reprendre");
-        btnStop = new JButton("⏹️ Arrêter");
-        JButton btnReset = new JButton("🔄 Reset");
+        btnPause = new JButton("Pause");
+        JButton btnResume = new JButton("Reprendre");
+        btnStop = new JButton("Arrêter");
+        JButton btnReset = new JButton("Reset");
         
         styleButton(btnPause, new Color(255, 200, 50));
         styleButton(btnResume, new Color(100, 200, 100));
@@ -234,7 +234,7 @@ add(southContainer, BorderLayout.SOUTH);
         infoText.setFont(new Font("Arial", Font.PLAIN, 11));
         infoText.setBackground(new Color(240, 240, 240));
         infoText.setText(
-            "ℹ️ Instructions :\n" +
+            "ℹInstructions :\n" +
             "• Générez un graphe aléatoire avec 'Nouveau Graphe'\n" +
             "• Choisissez 'Exécution Instantanée' pour voir le résultat final immédiatement\n" +
             "• Choisissez 'Exécution Pas à Pas' pour visualiser l'algorithme étape par étape\n" +

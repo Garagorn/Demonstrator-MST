@@ -169,10 +169,10 @@ public class SortedEdgeTablePanel extends JPanel {
         legendPanel.setBackground(new Color(255, 250, 240));
         legendPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        legendPanel.add(createLegendItem("⬤ En cours d'examen", CURRENT_COLOR));
-        legendPanel.add(createLegendItem("✓ Ajoutée au MST", ADDED_COLOR));
-        legendPanel.add(createLegendItem("✗ Rejetée (cycle)", REJECTED_COLOR));
-        legendPanel.add(createLegendItem("○ En attente", PENDING_COLOR));
+        legendPanel.add(createLegendItem("En cours d'examen", CURRENT_COLOR));
+        legendPanel.add(createLegendItem("Ajoutée au MST", ADDED_COLOR));
+        legendPanel.add(createLegendItem("Rejetée (cycle)", REJECTED_COLOR));
+        legendPanel.add(createLegendItem("En attente", PENDING_COLOR));
         
         return legendPanel;
     }
@@ -199,11 +199,11 @@ public class SortedEdgeTablePanel extends JPanel {
             
             String etat;
             if (isCurrent) {
-                etat = "⚡ En cours...";
+                etat = "En cours...";
             } else if (isAdded) {
-                etat = "✓ Ajoutée";
+                etat = "Ajoutée";
             } else {
-                etat = "○ En attente";
+                etat = "En attente";
             }
             
             tableModel.addRow(new Object[]{
@@ -247,7 +247,7 @@ public class SortedEdgeTablePanel extends JPanel {
                 edge.getV().getNom().equals(v) && 
                 edge.getPoids() == poids) {
                 
-                tableModel.setValueAt("✗ Rejetée (cycle)", i, 3);
+                tableModel.setValueAt("Rejetée (cycle)", i, 3);
                 break;
             }
         }
