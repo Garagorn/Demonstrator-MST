@@ -175,5 +175,5 @@ build.xml        # Configuration Ant
 ---
 
 # Auteurs
-- Matthieu **Thomas**
+- Matthieu **Thomas** (https://github.com/Matthieu-Thomas)
 - Basile **Tellier**
